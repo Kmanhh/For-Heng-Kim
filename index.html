@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>A Special Question ❤️</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>For Heng Kim ❤️</title>
     <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;600&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -22,17 +22,18 @@
             background-size: 24px 24px;
             font-family: 'Lexend', sans-serif;
             overflow: hidden;
+            touch-action: manipulation;
         }
 
         .card {
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
-            padding: 3rem;
+            padding: 2.5rem;
             border-radius: 40px;
             box-shadow: 0 20px 50px rgba(255, 77, 109, 0.15);
             text-align: center;
-            width: 450px;
-            max-width: 85%;
+            width: 90%;
+            max-width: 400px;
             position: relative;
             display: flex;
             flex-direction: column;
@@ -41,7 +42,7 @@
         }
 
         .gif-wrapper {
-            height: 200px;
+            height: 180px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -49,50 +50,65 @@
         }
 
         .display-img {
-            width: 200px;
+            width: 160px;
             height: auto;
             border-radius: 20px;
         }
 
         h1 {
             color: #4a4a4a;
-            font-size: 1.6rem;
+            font-size: 1.5rem;
             margin: 1rem 0 2rem 0;
+            line-height: 1.4;
         }
 
         .btn-container {
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 20px;
+            gap: 15px;
             width: 100%;
-            height: 150px;
+            height: 120px;
         }
 
         .btn {
-            padding: 16px 32px;
+            padding: 15px 30px;
             border: none;
             border-radius: 20px;
-            font-size: 1.1rem;
+            font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
-            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), background-color 0.2s, font-size 0.3s;
+            transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), background-color 0.2s;
             white-space: nowrap;
+            -webkit-tap-highlight-color: transparent;
         }
 
         #yesBtn {
             background-color: var(--accent-blue);
             color: white;
-            z-index: 5; /* Stays below the No button */
-            position: relative;
+            z-index: 5;
         }
 
         #noBtn {
             background-color: #f1f3f5;
             color: #868e96;
-            z-index: 9999; /* Higher than the Yes button so it's always visible */
+            z-index: 9999;
             position: relative;
-            transition: all 0.4s ease; /* Smoother movement */
+        }
+
+        .heart {
+            position: fixed;
+            color: var(--heart-red);
+            font-size: 20px;
+            user-select: none;
+            z-index: 1;
+            pointer-events: none;
+            animation: floatUp linear forwards;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
         }
 
         .fade-in {
@@ -112,7 +128,7 @@
             <img class="display-img" src="https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExcG8zZXF5dnllMDlrcmhvcGsyZHAzZ3Q0aHh5aWllb3p1dHZzZm1nMSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/754u3UNlbbc2tMg97K/giphy.gif" alt="Waving">
         </div>
         
-        <h1 id="question">Will you be my Valentine?</h1>
+        <h1 id="question">Heng Kim, will you be my Valentine?</h1>
 
         <div class="btn-container">
             <button class="btn" id="yesBtn" onclick="celebrate()">Yes</button>
@@ -122,18 +138,19 @@
 
     <script>
         let yesScale = 1;
-        let yesFontSize = 1.1;
+        let yesFontSize = 1;
         let noClickCount = 0;
 
         const phrases = [
             "No", 
-            "Are you sure?", 
-            "I'm running away!", 
-            "Can't catch me!", 
-            "Oops, over here!", 
-            "Getting bigger...", 
-            "Almost full screen!", 
-            "Just click Yes already!"
+            "Are you sure? 🥺", 
+            "Think again, Heng Kim!", 
+            "I'll be very sad...", 
+            "Wait, really?", 
+            "Last chance...", 
+            "Okay, I'm leaving!", 
+            "Can't catch me now!",
+            "Nope! Click Yes!"
         ];
 
         function handleNo() {
@@ -141,41 +158,55 @@
             const noBtn = document.getElementById('noBtn');
             const yesBtn = document.getElementById('yesBtn');
 
-            // 1. Grow the Yes button and its text drastically
-            yesScale += 1.8;
-            yesFontSize += 1.3;
+            // 1. Grow the Yes button every time
+            yesScale += 1.3;
+            yesFontSize += 0.7;
             yesBtn.style.transform = `scale(${yesScale})`;
             yesBtn.style.fontSize = `${yesFontSize}rem`;
 
             // 2. Change the No button text
             noBtn.innerText = phrases[Math.min(noClickCount, phrases.length - 1)];
 
-            // 3. Move the No button out of the way
-            // We switch to fixed so it can travel anywhere on screen
-            noBtn.style.position = 'fixed';
-            
-            // Logic to pick a random spot that is likely NOT in the center 
-            // where the Yes button is growing
-            const padding = 100;
-            const randomX = Math.random() * (window.innerWidth - noBtn.offsetWidth - padding) + (padding / 2);
-            const randomY = Math.random() * (window.innerHeight - noBtn.offsetHeight - padding) + (padding / 2);
-            
-            noBtn.style.left = `${randomX}px`;
-            noBtn.style.top = `${randomY}px`;
+            // 3. TELEPORT LOGIC: Only starts after click #7
+            if (noClickCount >= 7) {
+                noBtn.style.position = 'fixed';
+                const padding = 60;
+                const randomX = Math.random() * (window.innerWidth - noBtn.offsetWidth - padding) + (padding / 2);
+                const randomY = Math.random() * (window.innerHeight - noBtn.offsetHeight - padding) + (padding / 2);
+                
+                noBtn.style.left = `${randomX}px`;
+                noBtn.style.top = `${randomY}px`;
+            }
+        }
+
+        function startHearts() {
+            setInterval(() => {
+                const heart = document.createElement('div');
+                heart.innerHTML = '❤️';
+                heart.classList.add('heart');
+                heart.style.left = Math.random() * 100 + 'vw';
+                heart.style.fontSize = Math.random() * 20 + 15 + 'px';
+                heart.style.animationDuration = Math.random() * 3 + 3 + 's';
+                heart.style.opacity = Math.random();
+                document.body.appendChild(heart);
+                
+                setTimeout(() => heart.remove(), 6000);
+            }, 300);
         }
 
         function celebrate() {
-            const card = document.getElementById('mainCard');
-            // Remove the jumping No button for a clean victory
             const noBtn = document.getElementById('noBtn');
             if (noBtn) noBtn.remove();
+
+            startHearts();
+            const card = document.getElementById('mainCard');
             
             card.innerHTML = `
                 <div class="fade-in">
                     <div class="gif-wrapper">
-                        <img class="display-img" src="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExeDlodGFocXR5eDRva2FjbzNrMzR6YXprOG5ocTVxb2dvMWxyMDAxNCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/YVhpNLN6aBCpczlLGs/giphy.gif" alt="Celebration">
+                        <img class="display-img" src="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExeDlodGFocXR5eDRva2FjbzNrMzR6YXprOG5ocTVxb2dvMWxyMDAxNCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/YVhpNLN6aBCpczlLGs/giphy.gif" alt="Victory">
                     </div>
-                    <h1 style="color: var(--heart-red); margin-top: 0;">I knew you'd say yes</h1>
+                    <h1 style="color: var(--heart-red); margin-top: 0;">I knew you'd say yes, Heng Kim!</h1>
                     <p style="color: #666; font-weight: 600;">You made my day! ❤️</p>
                 </div>
             `;
